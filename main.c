@@ -17,8 +17,13 @@ typedef struct grafo{
 
 
 /************************************************************ Protótipo das Funções ****************************************************************/
-
-
+Vertice* adicionarVertice(Grafo *grafo, int v); //adiciona um novo vertice ao grafo
+void adicionarAdjacente(Grafo *grafo, Vertice *vertice, int v, int p); //adiciona um novo vertice a lista de vertices adjacentes de um vertice
+void convertResult(int *resultInt, char *result); //converte a linha do arquivo txt em um array de argumentos inteiros (linha exemplo: 1 2 10)
+void lerGrafo(Grafo *grafo); //leitura do grafo do arquivo txt e armazenamento em lista de adjacencia
+void inicializa(int *d, Vertice* pi[], int verticeInicial, int numVertices); //incialização de d[] e pi[] para o algoritmo de dijkstra
+Vertice* minimo(int *d, Vertice *vertices[], int numVertices); //encontra o vertice com menor valor de distancia
+void dijkstra(Grafo *grafo, int verticeInicial); //algoritmo de dijkstra para calcular o caminho minimo
 /***************************************************************************************************************************************************/
 
 Vertice* adicionarVertice(Grafo *grafo, int v){
