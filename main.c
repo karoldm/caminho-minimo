@@ -7,8 +7,6 @@ int Tempo; //variavel para marcar o tempo de descoberta/finalização de cada v�
 typedef struct vertice{
     int v; //inteiro que representa o vértice
     int p; //inteiro que representa o peso da aresta
-    //int d; //distância para o algoritmo de dijkstra
-    //struct vertice* pi; //precedente para o algoritmo de dijksra
     struct vertice *prox; //vértices adjacente
 }Vertice;
 
@@ -382,6 +380,7 @@ void imprimir(Grafo* grafo, Vertice* pi[]){
         i++;
     }
 }
+
 
 int main(void){
     Grafo grafo;
