@@ -2,6 +2,8 @@
 #include <stdlib.h>
 #include <string.h>
 
+int Tempo; //variavel para marcar o tempo de descoberta/finalização de cada vértice
+
 typedef struct vertice{
     int v; //inteiro que representa o vértice
     int p; //inteiro que representa o peso da aresta
@@ -15,6 +17,11 @@ typedef struct grafo{
     Vertice *vertices[]; //Array de vertices pertencentes ao grafo
 }Grafo;
 
+typedef struct pilha{
+    int indice;
+    Vertice *vertices[];
+}PilhaVertice;
+
 
 /************************************************************ Protótipo das Funções ****************************************************************/
 Vertice* adicionarVertice(Grafo *grafo, int v); //adiciona um novo vertice ao grafo
@@ -23,7 +30,9 @@ void convertResult(int *resultInt, char *result); //converte a linha do arquivo 
 void lerGrafo(Grafo *grafo); //leitura do grafo do arquivo txt e armazenamento em lista de adjacencia
 void inicializa(int *d, Vertice* pi[], int verticeInicial, int numVertices); //incialização de d[] e pi[] para o algoritmo de dijkstra
 Vertice* minimo(int *d, Vertice *vertices[], int numVertices); //encontra o vertice com menor valor de distancia
+void relaxar(int* d, Vertice* pi[], Vertice* u, Vertice* v); //função para calcular menor caminho
 void dijkstra(Grafo *grafo, int verticeInicial); //algoritmo de dijkstra para calcular o caminho minimo
+void imprimir(Grafo* grafo, Vertice* pi[]); //imprimir caminho do vértice inicial até todos os outros
 /***************************************************************************************************************************************************/
 
 Vertice* adicionarVertice(Grafo *grafo, int v){
@@ -97,13 +106,13 @@ void lerGrafo(Grafo *grafo){
         result = fgets(linha, 100, file);
         if(result){
             int numVertices = atoi(result);
-            grafo->numVertices = numVertices;
+            grafo->numVertices = numVertices+1;
         }
 
-        int i = 0;
+        int i = 1;
         int resultInt[3]; //para converter o resultado em int
         //percorrendo arquivo
-        while(!feof(file) && i < grafo->numVertices){
+        while(!feof(file) && i <= grafo->numVertices){
 
             /*sabemos que toda linha (após a primeira) do arquivo possui 3 informações:
             *número do vértico de origem (resultInt[0])
@@ -161,8 +170,10 @@ void lerGrafo(Grafo *grafo){
 
 void inicializa(int *d, Vertice* pi[], int verticeInicial, int numVertices){
 
-    for(int i = 1; i <= numVertices; i++){
-        *(d+i) = 2147483647; //valor máximo para um int em C
+    for(int i = 1; i < numVertices; i++){
+        //valor próximo ao máximo para um int em C
+        //Não utilizar o valor máximo, pois isso impede de realizar a soma da distância com o peso na etapa de relaxar as arestas
+        *(d+i) =  2147000000;
         pi[i] = NULL;
     }
 
@@ -192,6 +203,13 @@ Vertice* minimo(int *d, Vertice *vertices[], int numVertices){
     return verticeMinimo;
 }
 
+void relaxar(int* d, Vertice* pi[], Vertice* u, Vertice* v){
+    if(d[v->v] > d[u->v] + v->p){
+        d[v->v] = (d[u->v] + v->p);
+        pi[v->v] = u;
+    }
+}
+
 void dijkstra(Grafo *grafo, int verticeInicial){
     int numVertices = grafo->numVertices;
 
@@ -218,16 +236,151 @@ void dijkstra(Grafo *grafo, int verticeInicial){
 
         //percorrendo vertices adjacentes
         while(aux != NULL){
-            if(d[aux->v] > d[u->v] + aux->p){
-                d[aux->v] = (d[u->v] + aux->p);
-                pi[aux->v] = u;
-            }
+            relaxar(d, pi, u, aux);
             aux = aux->prox;
         }
     }
 
-printf("\n d: %d %d %d %d %d", d[1], d[2], d[3], d[4], d[5]);
-printf("\n v: NULL %d %d %d %d", pi[2]->v, pi[3]->v, pi[4]->v, pi[5]->v);
+    printf("\nDijkstra: \n");
+    imprimir(grafo, pi);
+}
+
+void visita(Grafo* grafo, Vertice* u, char* cor, int* descoberta, int* finalizacao, PilhaVertice* K){
+
+    cor[u->v] = 'c'; //vertice descoberto
+    Tempo++;
+    descoberta[u->v] = Tempo;
+
+    Vertice* aux = u->prox;
+
+
+    //percorrendo vertices adjacentes
+    while(aux != NULL){
+        if(cor[aux->v] == 'b'){
+            visita(grafo, grafo->vertices[aux->v], cor, descoberta, finalizacao, K);
+        }
+        aux = aux->prox;
+    }
+
+    cor[u->v] = 'p';
+    Tempo++;
+    finalizacao[u->v] = Tempo;
+
+    K->vertices[K->indice] = u;
+    K->indice++;
+}
+
+PilhaVertice* ordenacaoTopologica(Grafo *grafo){
+    PilhaVertice *K = (PilhaVertice*)malloc(sizeof(PilhaVertice));
+    if(K != NULL){
+        K->indice = 1;
+        int numVertices = grafo->numVertices;
+        char cor[numVertices];   //array para armazenar a cor de cada vértice
+        int descoberta[numVertices]; //array para armazenar o tempo de descoberta de cada vértice
+        int finalizacao[numVertices]; //array para armazenar o tempo de finalização de cada vértice
+        /*
+        *b = branco
+        *c = cinza
+        *p = preto
+        */
+        Vertice* pi[numVertices]; //array para armazenar antecessor de cada vértice
+
+        for(int i = 1; i < numVertices; i++){
+            cor[i] = 'b';
+        }
+
+        Tempo = 0;
+
+        for(int i = 1; i < numVertices; i++){
+            if(cor[i] == 'b') visita(grafo, grafo->vertices[i], cor, descoberta, finalizacao, K);
+        }
+
+        int i = 1;
+        int j = K->indice-1;
+        while(i <= j){
+            Vertice* aux = K->vertices[i];
+            K->vertices[i] = K->vertices[j];
+            K->vertices[j] = aux;
+            i++; j--;
+        }
+    }
+
+    return K;
+}
+
+void caminhoMinimo_GAO(Grafo* grafo){
+    PilhaVertice* K = ordenacaoTopologica(grafo);
+    int numVertices = grafo->numVertices;
+
+    int d[numVertices];
+    Vertice* pi[numVertices];
+    inicializa(d, pi, K->vertices[1]->v, numVertices);
+
+    for(int i = 1; i < numVertices; i++){
+        //percorrendo vértices da lista da ordenação topológica
+        Vertice* u = K->vertices[i];
+        Vertice* aux = u->prox;
+
+        //percorrendo vertices adjacentes
+        while(aux != NULL){
+            relaxar(d, pi, u, aux);
+            aux = aux->prox;
+        }
+
+    }
+
+    printf("\nCaminhoMinimo_GAO: \n");
+    imprimir(grafo, pi);
+
+}
+
+void imprimir(Grafo* grafo, Vertice* pi[]){
+    int indPrim = 1;
+    Vertice* primPi;
+    primPi = pi[indPrim];
+
+    //procurando o primeiro vertice
+    while(primPi != NULL){
+        indPrim++;
+        primPi = pi[indPrim];
+    }
+
+    Vertice* primVertice;
+    primVertice = grafo->vertices[indPrim];
+
+    int i = 1;
+    while(i < grafo->numVertices){
+
+        if(primVertice != grafo->vertices[i]){
+
+            Vertice* destino = grafo->vertices[i];
+            Vertice* caminho[grafo->numVertices];
+            printf("\nCaminho do vertice %d ao %d: ", primVertice->v, destino->v);
+
+            //traçando caminho
+            int j = 0;
+            Vertice* ant;
+            ant = pi[destino->v];
+
+            while(ant != primVertice){
+                caminho[j] = ant;
+                ant = pi[ant->v];
+                j++;
+            }
+
+            printf("%d ", primVertice->v);
+
+            j--;
+            while(j >= 0){
+                printf("-> %d ", caminho[j]->v);
+                j--;
+            }
+
+            printf("-> %d", destino->v);
+        }
+
+        i++;
+    }
 }
 
 int main(void){
@@ -235,6 +388,12 @@ int main(void){
     lerGrafo(&grafo);
 
     dijkstra(&grafo, 1);
+
+    printf("\n\n\n");
+
+    caminhoMinimo_GAO(&grafo);
+
+    printf("\n\n\n");
 
     return 0;
 }
