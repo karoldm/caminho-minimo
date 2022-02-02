@@ -31,6 +31,10 @@ void inicializa(int *d, Vertice* pi[], int verticeInicial, int numVertices); //i
 Vertice* minimo(int *d, Vertice *vertices[], int numVertices); //encontra o vertice com menor valor de distancia
 void relaxar(int* d, Vertice* pi[], int tam, Vertice* u, Vertice* v); //função para calcular menor caminho
 void dijkstra(Grafo *grafo, int verticeInicial); //algoritmo de dijkstra para calcular o caminho minimo
+void visita(Grafo* grafo, Vertice* u, char* cor, int* descoberta, int* finalizacao, PilhaVertice* K); //função recursiva para visitar todos os
+                                                                                                      //vértices adjacentes de um vértice dado
+PilhaVertice* ordenacaoTopologica(Grafo *grafo); //Algoritmo de busca profunda para fazer a ordenação topologica dos vértices
+void caminhoMinimo_GAO(Grafo* grafo, int verticeInicial); //algoritmo para calcular o caminho minimo usando ordenação topologica
 
 void logText(char str[]); //função para gravar string no arquivo de log
 void LogImprimirCaminho(Grafo* grafo, Vertice* pi[]); //gravar no log caminho do vértice inicial até todos os outros
