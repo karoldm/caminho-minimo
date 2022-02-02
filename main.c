@@ -1,8 +1,9 @@
-#include <stdio.h>
+ #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
 int Tempo; //variavel para marcar o tempo de descoberta/finalização de cada vértice
+FILE *arqLog; //arquivo para gravar o log
 
 typedef struct vertice{
     int v; //inteiro que representa o vértice
@@ -28,9 +29,17 @@ void convertResult(int *resultInt, char *result); //converte a linha do arquivo 
 void lerGrafo(Grafo *grafo); //leitura do grafo do arquivo txt e armazenamento em lista de adjacencia
 void inicializa(int *d, Vertice* pi[], int verticeInicial, int numVertices); //incialização de d[] e pi[] para o algoritmo de dijkstra
 Vertice* minimo(int *d, Vertice *vertices[], int numVertices); //encontra o vertice com menor valor de distancia
-void relaxar(int* d, Vertice* pi[], Vertice* u, Vertice* v); //função para calcular menor caminho
+void relaxar(int* d, Vertice* pi[], int tam, Vertice* u, Vertice* v); //função para calcular menor caminho
 void dijkstra(Grafo *grafo, int verticeInicial); //algoritmo de dijkstra para calcular o caminho minimo
-void imprimir(Grafo* grafo, Vertice* pi[]); //imprimir caminho do vértice inicial até todos os outros
+
+void logText(char str[]); //função para gravar string no arquivo de log
+void LogImprimirCaminho(Grafo* grafo, Vertice* pi[]); //gravar no log caminho do vértice inicial até todos os outros
+void logVetor(int vetor[], int tam); //função para gravar no log um vetor de inteiros (para gravar somente o vetor d por exemplo)
+void logInt(int num); //gravar um numero inteiro no log
+void logTabela(int d[], Vertice* pi[], int tam); //função para gravar no log a tabela composta por d e pi
+void logVertices(Vertice* vertices[], int numVertices); //função para gravar no log um vetor de vértices
+void logDadosOrdenacaoTopologica(char cor[], int descoberta[], int finalizacao[], int tam); //função para gravar no log dados da Ordenação Topológica
+                                                                                            //(cor, tempo de descoberta, tempo de finalização)
 /***************************************************************************************************************************************************/
 
 Vertice* adicionarVertice(Grafo *grafo, int v){
@@ -168,6 +177,8 @@ void lerGrafo(Grafo *grafo){
 
 void inicializa(int *d, Vertice* pi[], int verticeInicial, int numVertices){
 
+    logText("\n\nInicializando dados...");
+
     for(int i = 1; i < numVertices; i++){
         //valor próximo ao máximo para um int em C
         //Não utilizar o valor máximo, pois isso impede de realizar a soma da distância com o peso na etapa de relaxar as arestas
@@ -179,6 +190,13 @@ void inicializa(int *d, Vertice* pi[], int verticeInicial, int numVertices){
 }
 
 Vertice* minimo(int *d, Vertice *vertices[], int numVertices){
+
+/*********************** Log *****************************/
+    logText("\n\nFunção Minimo");
+    logText("\nd: ");
+    logVetor(d, numVertices);
+/*********************************************************/
+
     Vertice* verticeMinimo;
     int minimo;
 
@@ -198,14 +216,42 @@ Vertice* minimo(int *d, Vertice *vertices[], int numVertices){
         }
     }
 
+/*********************** Log *****************************/
+    logText("\nMinimo: ");
+    logInt(verticeMinimo->v);
+/*********************************************************/
+
     return verticeMinimo;
 }
 
-void relaxar(int* d, Vertice* pi[], Vertice* u, Vertice* v){
+void relaxar(int* d, Vertice* pi[], int tam, Vertice* u, Vertice* v){
+
+/*********************** Log *****************************/
+    logText("\n\nFunção Relaxar: ");
+
+
+    logText("\nu: ");
+    logInt(u->v);
+
+    logText("\nv: ");
+    logInt(v->v);
+
+    logText("\nw(u, v): ");
+    logInt(v->p);
+
+    logText("\n\nAntes da função relaxar: ");
+    logTabela(d, pi, tam);
+/*********************************************************/
+
     if(d[v->v] > d[u->v] + v->p){
         d[v->v] = (d[u->v] + v->p);
         pi[v->v] = u;
     }
+
+/*********************** Log *****************************/
+    logText("\n\nApos Função Relaxar: ");
+    logTabela(d, pi, tam);
+/*********************************************************/
 }
 
 void dijkstra(Grafo *grafo, int verticeInicial){
@@ -224,23 +270,35 @@ void dijkstra(Grafo *grafo, int verticeInicial){
     int i;
     for(i = 1; i <= numVertices; i++) *(Q+i) = grafo->vertices[i];
 
+    logTabela(d, pi, numVertices);
+    logText("\nQ: ");
+    logVertices(Q, numVertices);
+
+
     while(dimQ > 0){
         u = minimo(d, Q, numVertices);
         dimQ--;
         //marcar vertice como visitado
         Q[u->v] = NULL;
 
+        logText("\nVertice atual: ");
+        logInt(u->v);
+
+        logText("\nQ: ");
+        logVertices(Q, numVertices);
+
         Vertice* aux = u->prox;
 
         //percorrendo vertices adjacentes
         while(aux != NULL){
-            relaxar(d, pi, u, aux);
+            logText("\n\nAdjacente: ");
+            logInt(aux->v);
+            relaxar(d, pi, numVertices, u, aux);
             aux = aux->prox;
         }
     }
 
-    printf("\nDijkstra: \n");
-    imprimir(grafo, pi);
+    LogImprimirCaminho(grafo, pi);
 }
 
 void visita(Grafo* grafo, Vertice* u, char* cor, int* descoberta, int* finalizacao, PilhaVertice* K){
@@ -249,8 +307,12 @@ void visita(Grafo* grafo, Vertice* u, char* cor, int* descoberta, int* finalizac
     Tempo++;
     descoberta[u->v] = Tempo;
 
-    Vertice* aux = u->prox;
+    logText("\n\nFunção Visita: ");
+    logText("Visitando vértice ");
+    logInt(u->v);
+    logDadosOrdenacaoTopologica(cor, descoberta, finalizacao, grafo->numVertices);
 
+    Vertice* aux = u->prox;
 
     //percorrendo vertices adjacentes
     while(aux != NULL){
@@ -266,9 +328,14 @@ void visita(Grafo* grafo, Vertice* u, char* cor, int* descoberta, int* finalizac
 
     K->vertices[K->indice] = u;
     K->indice++;
+
+    logText("\n\nFinalizando visita do vértice ");
+    logInt(u->v);
+    logDadosOrdenacaoTopologica(cor, descoberta, finalizacao, grafo->numVertices);
 }
 
 PilhaVertice* ordenacaoTopologica(Grafo *grafo){
+
     PilhaVertice *K = (PilhaVertice*)malloc(sizeof(PilhaVertice));
     if(K != NULL){
         K->indice = 1;
@@ -285,7 +352,15 @@ PilhaVertice* ordenacaoTopologica(Grafo *grafo){
 
         for(int i = 1; i < numVertices; i++){
             cor[i] = 'b';
+            descoberta[i] = -1;
+            finalizacao[i] = -1;
         }
+
+/*********************** Log *****************************/
+    logText("\n\nFunção Ordenação Topológica: ");
+    logText("\nDados iniciais: ");
+    logDadosOrdenacaoTopologica(cor, descoberta, finalizacao, numVertices);
+/*********************************************************/
 
         Tempo = 0;
 
@@ -306,33 +381,44 @@ PilhaVertice* ordenacaoTopologica(Grafo *grafo){
     return K;
 }
 
-void caminhoMinimo_GAO(Grafo* grafo){
+void caminhoMinimo_GAO(Grafo* grafo, int verticeInicial){
     PilhaVertice* K = ordenacaoTopologica(grafo);
     int numVertices = grafo->numVertices;
 
     int d[numVertices];
     Vertice* pi[numVertices];
-    inicializa(d, pi, K->vertices[1]->v, numVertices);
+    inicializa(d, pi, verticeInicial, numVertices);
+
+    logTabela(d, pi, numVertices);
+    logText("\nK (Ordenação Topológica): ");
+    logVertices(K->vertices, numVertices);
 
     for(int i = 1; i < numVertices; i++){
         //percorrendo vértices da lista da ordenação topológica
         Vertice* u = K->vertices[i];
         Vertice* aux = u->prox;
 
+        logText("\n\nVertice atual de K: ");
+        logInt(u->v);
+
         //percorrendo vertices adjacentes
         while(aux != NULL){
-            relaxar(d, pi, u, aux);
+            logText("\nAdjacente ");
+            logInt(aux->v);
+            relaxar(d, pi, numVertices, u, aux);
             aux = aux->prox;
         }
 
     }
 
-    printf("\nCaminhoMinimo_GAO: \n");
-    imprimir(grafo, pi);
+    LogImprimirCaminho(grafo, pi);
 
 }
 
-void imprimir(Grafo* grafo, Vertice* pi[]){
+void LogImprimirCaminho(Grafo* grafo, Vertice* pi[]){
+
+    logText("\n\n");
+
     int indPrim = 1;
     Vertice* primPi;
     primPi = pi[indPrim];
@@ -353,7 +439,12 @@ void imprimir(Grafo* grafo, Vertice* pi[]){
 
             Vertice* destino = grafo->vertices[i];
             Vertice* caminho[grafo->numVertices];
-            printf("\nCaminho do vertice %d ao %d: ", primVertice->v, destino->v);
+
+            logText("\nCaminho do vértice ");
+            logInt(primVertice->v);
+            logText(" ao vértice ");
+            logInt(destino->v);
+            logText(": ");
 
             //traçando caminho
             int j = 0;
@@ -366,33 +457,116 @@ void imprimir(Grafo* grafo, Vertice* pi[]){
                 j++;
             }
 
-            printf("%d ", primVertice->v);
+            logInt(primVertice->v);
 
             j--;
             while(j >= 0){
-                printf("-> %d ", caminho[j]->v);
+                logText(" -> ");
+                logInt(caminho[j]->v);
                 j--;
             }
 
-            printf("-> %d", destino->v);
+            logText(" -> ");
+            logInt(destino->v);
         }
 
         i++;
     }
 }
 
+void logDadosOrdenacaoTopologica(char cor[], int descoberta[], int finalizacao[], int tam){
+    char ch[2];
+    logText("\n\nCor: ");
+    for(int i = 1; i < tam; i++){
+        ch[0] = cor[i];
+        ch[1] = '\0';
+        logText(ch);
+        logText(" | ");
+    }
+    logText("\nTempo de descoberta: ");
+    logVetor(descoberta, tam);
+    logText("\nTempo de finalização: ");
+    logVetor(finalizacao, tam);
+}
+
+void logVetor(int vetor[], int tam){
+    for(int i = 1; i < tam; i++){
+        logInt(vetor[i]);
+        logText(" | ");
+    }
+}
+
+void logInt(int num){
+    char result[50];
+    itoa(num, result, 10);
+    logText(result);
+}
+
+void logTabela(int d[], Vertice* pi[], int tam){
+
+    logText("\nd: ");
+    logVetor(d, tam);
+
+    logText("\npi: ");
+    logVertices(pi, tam);
+
+}
+
+void logVertices(Vertice* vertices[], int numVertices){
+    char* result;
+    for(int i = 1; i < numVertices; i++){
+        if(vertices[i] != NULL){
+            logInt(vertices[i]->v);
+            logText(" | ");
+        }
+        else logText("NULL | ");
+    }
+}
+
+void logText(char str[]){
+    int result;
+
+    arqLog = fopen("arqLog.txt", "at");
+
+    if (arqLog != NULL){
+        result = fputs(str, arqLog);
+        if (result == EOF) printf("\nERRO AO GRAVAR TEXTO NO ARQUIVO");
+    }
+    else {
+        printf("\nERRO AO ABRIR O ARQUIVO");
+    }
+
+    fclose(arqLog);
+}
+
 
 int main(void){
+
+    remove("arqLog.txt");
+
     Grafo grafo;
+
+    logText("\nLendo grafo...");
     lerGrafo(&grafo);
 
-    dijkstra(&grafo, 1);
+    int vInicial = 3;
 
-    printf("\n\n\n");
+    //printf("\nDigite o vertice de origem: ");
+    //scanf("%d", &vInicial);
 
-    caminhoMinimo_GAO(&grafo);
+    logText("\n\nDijkstra: ");
+    dijkstra(&grafo, vInicial);
 
-    printf("\n\n\n");
+    logText("\n\n\nCaminho Minimo GAO: ");
+    caminhoMinimo_GAO(&grafo, vInicial);
 
+
+    logText("\n\n\n");
+
+    printf("\nProcessamento concluido, para ver o log do processamento e o resultado basta consultar o arquivo 'arqLog.txt'");
+    printf("\n\n\n\n");
+
+
+    system("PAUSE");
     return 0;
 }
