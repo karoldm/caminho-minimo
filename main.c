@@ -33,7 +33,7 @@ void relaxar(int* d, Vertice* pi[], int tam, Vertice* u, Vertice* v); //função
 void dijkstra(Grafo *grafo, int verticeInicial); //algoritmo de dijkstra para calcular o caminho minimo
 void visita(Grafo* grafo, Vertice* u, char* cor, int* descoberta, int* finalizacao, PilhaVertice* K); //função recursiva para visitar todos os
                                                                                                       //vértices adjacentes de um vértice dado
-PilhaVertice* ordenacaoTopologica(Grafo *grafo); //Algoritmo de busca profunda para fazer a ordenação topologica dos vértices
+PilhaVertice* ordenacaoTopologica(Grafo *grafo, int verticeInicial); //Algoritmo de busca profunda para fazer a ordenação topologica dos vértices
 void caminhoMinimo_GAO(Grafo* grafo, int verticeInicial); //algoritmo para calcular o caminho minimo usando ordenação topologica
 
 void logText(char str[]); //função para gravar string no arquivo de log
@@ -329,12 +329,13 @@ void visita(Grafo* grafo, Vertice* u, char cor[], int descoberta[], int finaliza
     K->vertices[K->indice] = u;
     K->indice++;
 
-    logText("\n\nFinalizando visita do vértice ");
+    logText("\n\nFinalizando visita do vertice ");
     logInt(u->v);
     logDadosOrdenacaoTopologica(cor, descoberta, finalizacao, grafo->numVertices);
+
 }
 
-PilhaVertice* ordenacaoTopologica(Grafo *grafo){
+PilhaVertice* ordenacaoTopologica(Grafo *grafo, int verticeInicial){
 
     PilhaVertice *K = malloc(sizeof(PilhaVertice));
 
@@ -365,6 +366,8 @@ PilhaVertice* ordenacaoTopologica(Grafo *grafo){
 
         Tempo = 0;
 
+        visita(grafo, grafo->vertices[verticeInicial], cor, descoberta, finalizacao, K);
+
         for(int i = 1; i < numVertices; i++){
             if(cor[i] == 'b') visita(grafo, grafo->vertices[i], cor, descoberta, finalizacao, K);
         }
@@ -384,7 +387,7 @@ PilhaVertice* ordenacaoTopologica(Grafo *grafo){
 
 void caminhoMinimo_GAO(Grafo* grafo, int verticeInicial){
 
-    PilhaVertice* K = ordenacaoTopologica(grafo);
+    PilhaVertice* K = ordenacaoTopologica(grafo, verticeInicial);
     int numVertices = grafo->numVertices;
 
     int d[numVertices];
@@ -405,8 +408,10 @@ void caminhoMinimo_GAO(Grafo* grafo, int verticeInicial){
 
         //percorrendo vertices adjacentes
         while(aux != NULL){
+
             logText("\nAdjacente ");
             logInt(aux->v);
+
             relaxar(d, pi, numVertices, u, aux);
             aux = aux->prox;
         }
@@ -527,11 +532,12 @@ void logVertices(Vertice* vertices[], int numVertices){
 
 void logText(char str[]){
     int result;
+    puts("");
 
     arqLog = fopen("arqLog.txt", "at");
 
     if (arqLog != NULL){
-        result = fputs(str, arqLog);
+        result = fprintf(arqLog, str);
         if (result == EOF) printf("\nERRO AO GRAVAR TEXTO NO ARQUIVO");
     }
     else {
@@ -540,7 +546,6 @@ void logText(char str[]){
 
     fclose(arqLog);
 }
-
 
 int main(void){
 
@@ -559,8 +564,12 @@ int main(void){
     logText("\n\nDijkstra: ");
     dijkstra(&grafo, vInicial);
 
+    logText("\n\n\nCaminho Minimo GAO: ");
+    caminhoMinimo_GAO(&grafo, vInicial);
+
+
     printf("\nProcessamento concluido, para ver o log do processamento e o resultado basta consultar o arquivo 'arqLog.txt'");
-    printf("\n\n\n\n");
+    printf("\n\n\n\n\n\n\n\n\n\n\n\n");
 
 
     system("PAUSE");
