@@ -4,66 +4,15 @@ Lendo grafo...
 Dijkstra: 
 
 Inicializando dados...
-d: 2147000000 | 2147000000 | 0 | 2147000000 | 2147000000 | 
+d: 2147000000 | 2147000000 | 2147000000 | 2147000000 | 0 | 
 pi: NULL | NULL | NULL | NULL | NULL | 
 Q: 1 | 2 | 3 | 4 | 5 | 
 
 Função Minimo
-d: 2147000000 | 2147000000 | 0 | 2147000000 | 2147000000 | 
-Minimo: 3
-Vertice atual: 3
-Q: 1 | 2 | NULL | 4 | 5 | 
-
-Adjacente: 2
-
-Função Relaxar: 
-u: 3
-v: 2
-w(u, v): 3
-
-Antes da função relaxar: 
-d: 2147000000 | 2147000000 | 0 | 2147000000 | 2147000000 | 
-pi: NULL | NULL | NULL | NULL | NULL | 
-
-Apos Função Relaxar: 
-d: 2147000000 | 3 | 0 | 2147000000 | 2147000000 | 
-pi: NULL | 3 | NULL | NULL | NULL | 
-
-Adjacente: 4
-
-Função Relaxar: 
-u: 3
-v: 4
-w(u, v): 9
-
-Antes da função relaxar: 
-d: 2147000000 | 3 | 0 | 2147000000 | 2147000000 | 
-pi: NULL | 3 | NULL | NULL | NULL | 
-
-Apos Função Relaxar: 
-d: 2147000000 | 3 | 0 | 9 | 2147000000 | 
-pi: NULL | 3 | NULL | 3 | NULL | 
-
-Adjacente: 5
-
-Função Relaxar: 
-u: 3
-v: 5
-w(u, v): 2
-
-Antes da função relaxar: 
-d: 2147000000 | 3 | 0 | 9 | 2147000000 | 
-pi: NULL | 3 | NULL | 3 | NULL | 
-
-Apos Função Relaxar: 
-d: 2147000000 | 3 | 0 | 9 | 2 | 
-pi: NULL | 3 | NULL | 3 | 3 | 
-
-Função Minimo
-d: 2147000000 | 3 | 0 | 9 | 2 | 
+d: 2147000000 | 2147000000 | 2147000000 | 2147000000 | 0 | 
 Minimo: 5
 Vertice atual: 5
-Q: 1 | 2 | NULL | 4 | NULL | 
+Q: 1 | 2 | 3 | 4 | NULL | 
 
 Adjacente: 1
 
@@ -73,12 +22,12 @@ v: 1
 w(u, v): 7
 
 Antes da função relaxar: 
-d: 2147000000 | 3 | 0 | 9 | 2 | 
-pi: NULL | 3 | NULL | 3 | 3 | 
+d: 2147000000 | 2147000000 | 2147000000 | 2147000000 | 0 | 
+pi: NULL | NULL | NULL | NULL | NULL | 
 
 Apos Função Relaxar: 
-d: 9 | 3 | 0 | 9 | 2 | 
-pi: 5 | 3 | NULL | 3 | 3 | 
+d: 7 | 2147000000 | 2147000000 | 2147000000 | 0 | 
+pi: 5 | NULL | NULL | NULL | NULL | 
 
 Adjacente: 4
 
@@ -88,54 +37,18 @@ v: 4
 w(u, v): 4
 
 Antes da função relaxar: 
-d: 9 | 3 | 0 | 9 | 2 | 
-pi: 5 | 3 | NULL | 3 | 3 | 
+d: 7 | 2147000000 | 2147000000 | 2147000000 | 0 | 
+pi: 5 | NULL | NULL | NULL | NULL | 
 
 Apos Função Relaxar: 
-d: 9 | 3 | 0 | 6 | 2 | 
-pi: 5 | 3 | NULL | 5 | 3 | 
+d: 7 | 2147000000 | 2147000000 | 4 | 0 | 
+pi: 5 | NULL | NULL | 5 | NULL | 
 
 Função Minimo
-d: 9 | 3 | 0 | 6 | 2 | 
-Minimo: 2
-Vertice atual: 2
-Q: 1 | NULL | NULL | 4 | NULL | 
-
-Adjacente: 3
-
-Função Relaxar: 
-u: 2
-v: 3
-w(u, v): 2
-
-Antes da função relaxar: 
-d: 9 | 3 | 0 | 6 | 2 | 
-pi: 5 | 3 | NULL | 5 | 3 | 
-
-Apos Função Relaxar: 
-d: 9 | 3 | 0 | 6 | 2 | 
-pi: 5 | 3 | NULL | 5 | 3 | 
-
-Adjacente: 4
-
-Função Relaxar: 
-u: 2
-v: 4
-w(u, v): 1
-
-Antes da função relaxar: 
-d: 9 | 3 | 0 | 6 | 2 | 
-pi: 5 | 3 | NULL | 5 | 3 | 
-
-Apos Função Relaxar: 
-d: 9 | 3 | 0 | 4 | 2 | 
-pi: 5 | 3 | NULL | 2 | 3 | 
-
-Função Minimo
-d: 9 | 3 | 0 | 4 | 2 | 
+d: 7 | 2147000000 | 2147000000 | 4 | 0 | 
 Minimo: 4
 Vertice atual: 4
-Q: 1 | NULL | NULL | NULL | NULL | 
+Q: 1 | 2 | 3 | NULL | NULL | 
 
 Adjacente: 5
 
@@ -145,18 +58,18 @@ v: 5
 w(u, v): 6
 
 Antes da função relaxar: 
-d: 9 | 3 | 0 | 4 | 2 | 
-pi: 5 | 3 | NULL | 2 | 3 | 
+d: 7 | 2147000000 | 2147000000 | 4 | 0 | 
+pi: 5 | NULL | NULL | 5 | NULL | 
 
 Apos Função Relaxar: 
-d: 9 | 3 | 0 | 4 | 2 | 
-pi: 5 | 3 | NULL | 2 | 3 | 
+d: 7 | 2147000000 | 2147000000 | 4 | 0 | 
+pi: 5 | NULL | NULL | 5 | NULL | 
 
 Função Minimo
-d: 9 | 3 | 0 | 4 | 2 | 
+d: 7 | 2147000000 | 2147000000 | 4 | 0 | 
 Minimo: 1
 Vertice atual: 1
-Q: NULL | NULL | NULL | NULL | NULL | 
+Q: NULL | 2 | 3 | NULL | NULL | 
 
 Adjacente: 2
 
@@ -166,12 +79,12 @@ v: 2
 w(u, v): 10
 
 Antes da função relaxar: 
-d: 9 | 3 | 0 | 4 | 2 | 
-pi: 5 | 3 | NULL | 2 | 3 | 
+d: 7 | 2147000000 | 2147000000 | 4 | 0 | 
+pi: 5 | NULL | NULL | 5 | NULL | 
 
 Apos Função Relaxar: 
-d: 9 | 3 | 0 | 4 | 2 | 
-pi: 5 | 3 | NULL | 2 | 3 | 
+d: 7 | 17 | 2147000000 | 4 | 0 | 
+pi: 5 | 1 | NULL | 5 | NULL | 
 
 Adjacente: 3
 
@@ -181,192 +94,20 @@ v: 3
 w(u, v): 5
 
 Antes da função relaxar: 
-d: 9 | 3 | 0 | 4 | 2 | 
-pi: 5 | 3 | NULL | 2 | 3 | 
+d: 7 | 17 | 2147000000 | 4 | 0 | 
+pi: 5 | 1 | NULL | 5 | NULL | 
 
 Apos Função Relaxar: 
-d: 9 | 3 | 0 | 4 | 2 | 
-pi: 5 | 3 | NULL | 2 | 3 | 
+d: 7 | 17 | 12 | 4 | 0 | 
+pi: 5 | 1 | 1 | 5 | NULL | 
 
 Função Minimo
-d: 9 | 3 | 0 | 4 | 2 | 
-Minimo: 1
-Vertice atual: 1
-Q: NULL | NULL | NULL | NULL | NULL | 
+d: 7 | 17 | 12 | 4 | 0 | 
+Minimo: 3
+Vertice atual: 3
+Q: NULL | 2 | NULL | NULL | NULL | 
 
 Adjacente: 2
-
-Função Relaxar: 
-u: 1
-v: 2
-w(u, v): 10
-
-Antes da função relaxar: 
-d: 9 | 3 | 0 | 4 | 2 | 
-pi: 5 | 3 | NULL | 2 | 3 | 
-
-Apos Função Relaxar: 
-d: 9 | 3 | 0 | 4 | 2 | 
-pi: 5 | 3 | NULL | 2 | 3 | 
-
-Adjacente: 3
-
-Função Relaxar: 
-u: 1
-v: 3
-w(u, v): 5
-
-Antes da função relaxar: 
-d: 9 | 3 | 0 | 4 | 2 | 
-pi: 5 | 3 | NULL | 2 | 3 | 
-
-Apos Função Relaxar: 
-d: 9 | 3 | 0 | 4 | 2 | 
-pi: 5 | 3 | NULL | 2 | 3 | 
-
-
-Caminho do vértice 3 ao vértice 1: 3 -> 5 -> 1
-Caminho do vértice 3 ao vértice 2: 3 -> 2
-Caminho do vértice 3 ao vértice 4: 3 -> 2 -> 4
-Caminho do vértice 3 ao vértice 5: 3 -> 5
-
-
-Caminho Minimo GAO: 
-
-Função Ordenação Topológica: 
-Dados iniciais: 
-
-Cor: b | b | b | b | b | 
-Tempo de descoberta: -1 | -1 | -1 | -1 | -1 | 
-Tempo de finalização: -1 | -1 | -1 | -1 | -1 | 
-
-Função Visita: Visitando vértice 1
-
-Cor: c | b | b | b | b | 
-Tempo de descoberta: 1 | -1 | -1 | -1 | -1 | 
-Tempo de finalização: -1 | -1 | -1 | -1 | -1 | 
-
-Função Visita: Visitando vértice 2
-
-Cor: c | c | b | b | b | 
-Tempo de descoberta: 1 | 2 | -1 | -1 | -1 | 
-Tempo de finalização: -1 | -1 | -1 | -1 | -1 | 
-
-Função Visita: Visitando vértice 3
-
-Cor: c | c | c | b | b | 
-Tempo de descoberta: 1 | 2 | 3 | -1 | -1 | 
-Tempo de finalização: -1 | -1 | -1 | -1 | -1 | 
-
-Função Visita: Visitando vértice 4
-
-Cor: c | c | c | c | b | 
-Tempo de descoberta: 1 | 2 | 3 | 4 | -1 | 
-Tempo de finalização: -1 | -1 | -1 | -1 | -1 | 
-
-Função Visita: Visitando vértice 5
-
-Cor: c | c | c | c | c | 
-Tempo de descoberta: 1 | 2 | 3 | 4 | 5 | 
-Tempo de finalização: -1 | -1 | -1 | -1 | -1 | 
-
-Finalizando visita do vértice 5
-
-Cor: c | c | c | c | p | 
-Tempo de descoberta: 1 | 2 | 3 | 4 | 5 | 
-Tempo de finalização: -1 | -1 | -1 | -1 | 6 | 
-
-Finalizando visita do vértice 4
-
-Cor: c | c | c | p | p | 
-Tempo de descoberta: 1 | 2 | 3 | 4 | 5 | 
-Tempo de finalização: -1 | -1 | -1 | 7 | 6 | 
-
-Finalizando visita do vértice 3
-
-Cor: c | c | p | p | p | 
-Tempo de descoberta: 1 | 2 | 3 | 4 | 5 | 
-Tempo de finalização: -1 | -1 | 8 | 7 | 6 | 
-
-Finalizando visita do vértice 2
-
-Cor: c | p | p | p | p | 
-Tempo de descoberta: 1 | 2 | 3 | 4 | 5 | 
-Tempo de finalização: -1 | 9 | 8 | 7 | 6 | 
-
-Finalizando visita do vértice 1
-
-Cor: p | p | p | p | p | 
-Tempo de descoberta: 1 | 2 | 3 | 4 | 5 | 
-Tempo de finalização: 10 | 9 | 8 | 7 | 6 | 
-
-Inicializando dados...
-d: 2147000000 | 2147000000 | 0 | 2147000000 | 2147000000 | 
-pi: NULL | NULL | NULL | NULL | NULL | 
-K (Ordenação Topológica): 1 | 2 | 3 | 4 | 5 | 
-
-Vertice atual de K: 1
-Adjacente 2
-
-Função Relaxar: 
-u: 1
-v: 2
-w(u, v): 10
-
-Antes da função relaxar: 
-d: 2147000000 | 2147000000 | 0 | 2147000000 | 2147000000 | 
-pi: NULL | NULL | NULL | NULL | NULL | 
-
-Apos Função Relaxar: 
-d: 2147000000 | 2147000000 | 0 | 2147000000 | 2147000000 | 
-pi: NULL | NULL | NULL | NULL | NULL | 
-Adjacente 3
-
-Função Relaxar: 
-u: 1
-v: 3
-w(u, v): 5
-
-Antes da função relaxar: 
-d: 2147000000 | 2147000000 | 0 | 2147000000 | 2147000000 | 
-pi: NULL | NULL | NULL | NULL | NULL | 
-
-Apos Função Relaxar: 
-d: 2147000000 | 2147000000 | 0 | 2147000000 | 2147000000 | 
-pi: NULL | NULL | NULL | NULL | NULL | 
-
-Vertice atual de K: 2
-Adjacente 3
-
-Função Relaxar: 
-u: 2
-v: 3
-w(u, v): 2
-
-Antes da função relaxar: 
-d: 2147000000 | 2147000000 | 0 | 2147000000 | 2147000000 | 
-pi: NULL | NULL | NULL | NULL | NULL | 
-
-Apos Função Relaxar: 
-d: 2147000000 | 2147000000 | 0 | 2147000000 | 2147000000 | 
-pi: NULL | NULL | NULL | NULL | NULL | 
-Adjacente 4
-
-Função Relaxar: 
-u: 2
-v: 4
-w(u, v): 1
-
-Antes da função relaxar: 
-d: 2147000000 | 2147000000 | 0 | 2147000000 | 2147000000 | 
-pi: NULL | NULL | NULL | NULL | NULL | 
-
-Apos Função Relaxar: 
-d: 2147000000 | 2147000000 | 0 | 2147000000 | 2147000000 | 
-pi: NULL | NULL | NULL | NULL | NULL | 
-
-Vertice atual de K: 3
-Adjacente 2
 
 Função Relaxar: 
 u: 3
@@ -374,13 +115,14 @@ v: 2
 w(u, v): 3
 
 Antes da função relaxar: 
-d: 2147000000 | 2147000000 | 0 | 2147000000 | 2147000000 | 
-pi: NULL | NULL | NULL | NULL | NULL | 
+d: 7 | 17 | 12 | 4 | 0 | 
+pi: 5 | 1 | 1 | 5 | NULL | 
 
 Apos Função Relaxar: 
-d: 2147000000 | 3 | 0 | 2147000000 | 2147000000 | 
-pi: NULL | 3 | NULL | NULL | NULL | 
-Adjacente 4
+d: 7 | 15 | 12 | 4 | 0 | 
+pi: 5 | 3 | 1 | 5 | NULL | 
+
+Adjacente: 4
 
 Função Relaxar: 
 u: 3
@@ -388,13 +130,14 @@ v: 4
 w(u, v): 9
 
 Antes da função relaxar: 
-d: 2147000000 | 3 | 0 | 2147000000 | 2147000000 | 
-pi: NULL | 3 | NULL | NULL | NULL | 
+d: 7 | 15 | 12 | 4 | 0 | 
+pi: 5 | 3 | 1 | 5 | NULL | 
 
 Apos Função Relaxar: 
-d: 2147000000 | 3 | 0 | 9 | 2147000000 | 
-pi: NULL | 3 | NULL | 3 | NULL | 
-Adjacente 5
+d: 7 | 15 | 12 | 4 | 0 | 
+pi: 5 | 3 | 1 | 5 | NULL | 
+
+Adjacente: 5
 
 Função Relaxar: 
 u: 3
@@ -402,63 +145,51 @@ v: 5
 w(u, v): 2
 
 Antes da função relaxar: 
-d: 2147000000 | 3 | 0 | 9 | 2147000000 | 
-pi: NULL | 3 | NULL | 3 | NULL | 
+d: 7 | 15 | 12 | 4 | 0 | 
+pi: 5 | 3 | 1 | 5 | NULL | 
 
 Apos Função Relaxar: 
-d: 2147000000 | 3 | 0 | 9 | 2 | 
-pi: NULL | 3 | NULL | 3 | 3 | 
+d: 7 | 15 | 12 | 4 | 0 | 
+pi: 5 | 3 | 1 | 5 | NULL | 
 
-Vertice atual de K: 4
-Adjacente 5
+Função Minimo
+d: 7 | 15 | 12 | 4 | 0 | 
+Minimo: 2
+Vertice atual: 2
+Q: NULL | NULL | NULL | NULL | NULL | 
+
+Adjacente: 3
 
 Função Relaxar: 
-u: 4
-v: 5
-w(u, v): 6
+u: 2
+v: 3
+w(u, v): 2
 
 Antes da função relaxar: 
-d: 2147000000 | 3 | 0 | 9 | 2 | 
-pi: NULL | 3 | NULL | 3 | 3 | 
+d: 7 | 15 | 12 | 4 | 0 | 
+pi: 5 | 3 | 1 | 5 | NULL | 
 
 Apos Função Relaxar: 
-d: 2147000000 | 3 | 0 | 9 | 2 | 
-pi: NULL | 3 | NULL | 3 | 3 | 
+d: 7 | 15 | 12 | 4 | 0 | 
+pi: 5 | 3 | 1 | 5 | NULL | 
 
-Vertice atual de K: 5
-Adjacente 1
-
-Função Relaxar: 
-u: 5
-v: 1
-w(u, v): 7
-
-Antes da função relaxar: 
-d: 2147000000 | 3 | 0 | 9 | 2 | 
-pi: NULL | 3 | NULL | 3 | 3 | 
-
-Apos Função Relaxar: 
-d: 9 | 3 | 0 | 9 | 2 | 
-pi: 5 | 3 | NULL | 3 | 3 | 
-Adjacente 4
+Adjacente: 4
 
 Função Relaxar: 
-u: 5
+u: 2
 v: 4
-w(u, v): 4
+w(u, v): 1
 
 Antes da função relaxar: 
-d: 9 | 3 | 0 | 9 | 2 | 
-pi: 5 | 3 | NULL | 3 | 3 | 
+d: 7 | 15 | 12 | 4 | 0 | 
+pi: 5 | 3 | 1 | 5 | NULL | 
 
 Apos Função Relaxar: 
-d: 9 | 3 | 0 | 6 | 2 | 
-pi: 5 | 3 | NULL | 5 | 3 | 
+d: 7 | 15 | 12 | 4 | 0 | 
+pi: 5 | 3 | 1 | 5 | NULL | 
 
 
-Caminho do vértice 3 ao vértice 1: 3 -> 5 -> 1
-Caminho do vértice 3 ao vértice 2: 3 -> 2
-Caminho do vértice 3 ao vértice 4: 3 -> 5 -> 4
-Caminho do vértice 3 ao vértice 5: 3 -> 5
-
-
+Caminho do vértice 5 ao vértice 1: 5 -> 1
+Caminho do vértice 5 ao vértice 2: 5 -> 1 -> 3 -> 2
+Caminho do vértice 5 ao vértice 3: 5 -> 1 -> 3
+Caminho do vértice 5 ao vértice 4: 5 -> 4

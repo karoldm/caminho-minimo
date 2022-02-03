@@ -23,8 +23,8 @@ typedef struct pilha{
 
 
 /************************************************************ Protótipo das Funções ****************************************************************/
-Vertice* adicionarVertice(Grafo *grafo, int v); //adiciona um novo vertice ao grafo
-void adicionarAdjacente(Grafo *grafo, Vertice *vertice, int v, int p); //adiciona um novo vertice a lista de vertices adjacentes de um vertice
+void adicionarVertice(Grafo *grafo, int v); //adiciona um novo vertice ao grafo
+void adicionarAdjacente(Grafo *grafo, int vertice, int v, int p); //adiciona um novo vertice a lista de vertices adjacentes de um vertice
 void convertResult(int *resultInt, char *result); //converte a linha do arquivo txt em um array de argumentos inteiros (linha exemplo: 1 2 10)
 void lerGrafo(Grafo *grafo); //leitura do grafo do arquivo txt e armazenamento em lista de adjacencia
 void inicializa(int *d, Vertice* pi[], int verticeInicial, int numVertices); //incialização de d[] e pi[] para o algoritmo de dijkstra
@@ -46,27 +46,25 @@ void logDadosOrdenacaoTopologica(char cor[], int descoberta[], int finalizacao[]
                                                                                             //(cor, tempo de descoberta, tempo de finalização)
 /***************************************************************************************************************************************************/
 
-Vertice* adicionarVertice(Grafo *grafo, int v){
-    Vertice *vertice;
-    vertice = (Vertice*)malloc(sizeof(Vertice));
+void adicionarVertice(Grafo *grafo, int v){
+    Vertice *novoVertice;
+    novoVertice = malloc(sizeof(Vertice));
 
-    if(vertice != NULL){
+    if(novoVertice != NULL){
 
-        vertice->v = v;
-        vertice->p = 0; //o peso de um vértice até ele mesmo é zero
-        vertice->prox = NULL;
+        novoVertice->v = v;
+        novoVertice->p = 0; //o peso de um vértice até ele mesmo é zero
+        novoVertice->prox = NULL;
 
-        grafo->vertices[v] = vertice;
-
-        return vertice;
+        grafo->vertices[v] = novoVertice;
     }
     else {
         printf("\nERRO AO ALOCAR MEMÓRIA PARA VÉRTICE DO GRAFO");
     }
 }
 
-void adicionarAdjacente(Grafo *grafo, Vertice *vertice, int v, int p){
-    Vertice *aux = grafo->vertices[vertice->v];
+void adicionarAdjacente(Grafo *grafo, int vertice, int v, int p){
+    Vertice *aux = grafo->vertices[vertice];
     Vertice *verticeAdj  = (Vertice*)malloc(sizeof(Vertice));
 
     if(verticeAdj != NULL){
@@ -122,8 +120,9 @@ void lerGrafo(Grafo *grafo){
 
         int i = 1;
         int resultInt[3]; //para converter o resultado em int
+
         //percorrendo arquivo
-        while(!feof(file) && i <= grafo->numVertices){
+        while(!feof(file) && i < grafo->numVertices){
 
             /*sabemos que toda linha (após a primeira) do arquivo possui 3 informações:
             *número do vértico de origem (resultInt[0])
@@ -131,43 +130,37 @@ void lerGrafo(Grafo *grafo){
             *custo/peso do vértice de origem ao de destino (resultInt[2])
             */
 
+
             result = fgets(linha, 100, file);
 
             if(result) {
                 convertResult(resultInt, result);
 
-                Vertice *vertice;
-                vertice = (Vertice*)malloc(sizeof(Vertice));
+                int verticeAtual = resultInt[0];
 
-                if(vertice != NULL){
+                adicionarVertice(grafo, verticeAtual);
 
-                    vertice = adicionarVertice(grafo, resultInt[0]);
+                adicionarAdjacente(grafo, verticeAtual, resultInt[1], resultInt[2]);
 
-                    adicionarAdjacente(grafo, vertice, resultInt[1], resultInt[2]);
+                while(!feof(file)){
+                    result = fgets(linha, 100, file);
 
-                    while(!feof(file)){
-                        result = fgets(linha, 100, file);
+                    //verricando se o vértice lido é adjacente ao vértice atual
+                    if(result && atoi(&result[0]) == verticeAtual){
 
-                        //verricando se o vértice lido é adjacente ao vértice atual
-                        if(result && atoi(&result[0]) == vertice->v){
+                        convertResult(resultInt, result);
 
-                            convertResult(resultInt, result);
-
-                            //adicionando vértice a lista de vértices adjacentes do vértice atual
-                            adicionarAdjacente(grafo, vertice, resultInt[1], resultInt[2]);
-                        }
-                        else {
-                            //como o próximo vértice já foi lido, voltamos uma linha
-                            fseek(file, -strlen(result)-1, SEEK_CUR);
-                            break;
-                        }
+                        //adicionando vértice a lista de vértices adjacentes do vértice atual
+                        adicionarAdjacente(grafo, verticeAtual, resultInt[1], resultInt[2]);
                     }
+                    else {
+                        //como o próximo vértice já foi lido, voltamos uma linha
+                        fseek(file, -strlen(result)-1, SEEK_CUR);
+                        break;
+                    }
+                }
 
-                    i++; //indo para o próximo vértice do grafo
-                }
-                else {
-                    printf("\nERRO AO ALOCAR MEMÓRIA PARA VÉRTICE DO GRAFO");
-                }
+                i++; //indo para o próximo vértice do grafo
             }//if(result)
         } //while externo
     }
@@ -179,21 +172,21 @@ void lerGrafo(Grafo *grafo){
     fclose(file);
 }
 
-void inicializa(int *d, Vertice* pi[], int verticeInicial, int numVertices){
+void inicializa(int d[], Vertice* pi[], int verticeInicial, int numVertices){
 
     logText("\n\nInicializando dados...");
 
     for(int i = 1; i < numVertices; i++){
         //valor próximo ao máximo para um int em C
         //Não utilizar o valor máximo, pois isso impede de realizar a soma da distância com o peso na etapa de relaxar as arestas
-        *(d+i) =  2147000000;
+        d[i] =  2147000000;
         pi[i] = NULL;
     }
 
-    *(d+verticeInicial) = 0;
+    d[verticeInicial] = 0;
 }
 
-Vertice* minimo(int *d, Vertice *vertices[], int numVertices){
+Vertice* minimo(int d[], Vertice *vertices[], int numVertices){
 
 /*********************** Log *****************************/
     logText("\n\nFunção Minimo");
@@ -209,13 +202,13 @@ Vertice* minimo(int *d, Vertice *vertices[], int numVertices){
     //procurando o primeiro vertice diferente de null dentro de Q
     while(vertices[i] == NULL) i++;
 
-    minimo = *(d+i);
+    minimo = d[i];
     verticeMinimo = vertices[i];
     i++;
 
     for(; i <= numVertices; i++){
-        if(vertices[i] != NULL && *(d+i) < minimo){
-            minimo = *(d+i);
+        if(vertices[i] != NULL && d[i] < minimo){
+            minimo = d[i];
             verticeMinimo = vertices[i];
         }
     }
@@ -263,7 +256,7 @@ void dijkstra(Grafo *grafo, int verticeInicial){
 
     //lista de vertices ainda não visitados
     Vertice* Q[numVertices];
-    int dimQ = numVertices;
+    int dimQ = numVertices-1;
 
     int d[numVertices];
     Vertice* pi[numVertices];
@@ -272,7 +265,7 @@ void dijkstra(Grafo *grafo, int verticeInicial){
     inicializa(d, pi, verticeInicial, numVertices);
 
     int i;
-    for(i = 1; i <= numVertices; i++) *(Q+i) = grafo->vertices[i];
+    for(i = 1; i < numVertices; i++) Q[i] = grafo->vertices[i];
 
     logTabela(d, pi, numVertices);
     logText("\nQ: ");
@@ -281,8 +274,9 @@ void dijkstra(Grafo *grafo, int verticeInicial){
 
     while(dimQ > 0){
         u = minimo(d, Q, numVertices);
-        dimQ--;
+
         //marcar vertice como visitado
+        dimQ--;
         Q[u->v] = NULL;
 
         logText("\nVertice atual: ");
@@ -295,8 +289,10 @@ void dijkstra(Grafo *grafo, int verticeInicial){
 
         //percorrendo vertices adjacentes
         while(aux != NULL){
+
             logText("\n\nAdjacente: ");
             logInt(aux->v);
+
             relaxar(d, pi, numVertices, u, aux);
             aux = aux->prox;
         }
@@ -305,7 +301,7 @@ void dijkstra(Grafo *grafo, int verticeInicial){
     LogImprimirCaminho(grafo, pi);
 }
 
-void visita(Grafo* grafo, Vertice* u, char* cor, int* descoberta, int* finalizacao, PilhaVertice* K){
+void visita(Grafo* grafo, Vertice* u, char cor[], int descoberta[], int finalizacao[], PilhaVertice* K){
 
     cor[u->v] = 'c'; //vertice descoberto
     Tempo++;
@@ -340,7 +336,8 @@ void visita(Grafo* grafo, Vertice* u, char* cor, int* descoberta, int* finalizac
 
 PilhaVertice* ordenacaoTopologica(Grafo *grafo){
 
-    PilhaVertice *K = (PilhaVertice*)malloc(sizeof(PilhaVertice));
+    PilhaVertice *K = malloc(sizeof(PilhaVertice));
+
     if(K != NULL){
         K->indice = 1;
         int numVertices = grafo->numVertices;
@@ -386,6 +383,7 @@ PilhaVertice* ordenacaoTopologica(Grafo *grafo){
 }
 
 void caminhoMinimo_GAO(Grafo* grafo, int verticeInicial){
+
     PilhaVertice* K = ordenacaoTopologica(grafo);
     int numVertices = grafo->numVertices;
 
@@ -546,26 +544,20 @@ void logText(char str[]){
 
 int main(void){
 
-    remove("arqLog.txt");
-
     Grafo grafo;
+
+    remove("arqLog.txt");
 
     logText("\nLendo grafo...");
     lerGrafo(&grafo);
 
-    int vInicial = 3;
+    int vInicial;
 
-    //printf("\nDigite o vertice de origem: ");
-    //scanf("%d", &vInicial);
+    printf("\nDigite o vertice de origem: ");
+    scanf("%d", &vInicial);
 
     logText("\n\nDijkstra: ");
     dijkstra(&grafo, vInicial);
-
-    logText("\n\n\nCaminho Minimo GAO: ");
-    caminhoMinimo_GAO(&grafo, vInicial);
-
-
-    logText("\n\n\n");
 
     printf("\nProcessamento concluido, para ver o log do processamento e o resultado basta consultar o arquivo 'arqLog.txt'");
     printf("\n\n\n\n");
