@@ -360,7 +360,7 @@ PilhaVertice* ordenacaoTopologica(Grafo *grafo, int verticeInicial){
 
 /*********************** Log *****************************/
     logText("\n\nFunção Ordenação Topológica: ");
-    logText("\nDados iniciais: ");
+    logText("\n\nDados iniciais: ");
     logDadosOrdenacaoTopologica(cor, descoberta, finalizacao, numVertices);
 /*********************************************************/
 
@@ -394,6 +394,7 @@ void caminhoMinimo_GAO(Grafo* grafo, int verticeInicial){
     Vertice* pi[numVertices];
     inicializa(d, pi, verticeInicial, numVertices);
 
+    logText("\n\nCaminho Minimo GAO: ");
     logTabela(d, pi, numVertices);
     logText("\nK (Ordenação Topológica): ");
     logVertices(K->vertices, numVertices);
@@ -409,7 +410,7 @@ void caminhoMinimo_GAO(Grafo* grafo, int verticeInicial){
         //percorrendo vertices adjacentes
         while(aux != NULL){
 
-            logText("\nAdjacente ");
+            logText("\n\nAdjacente ");
             logInt(aux->v);
 
             relaxar(d, pi, numVertices, u, aux);
@@ -557,9 +558,17 @@ int main(void){
     lerGrafo(&grafo);
 
     int vInicial;
+    int verticeInvalido = 1;
 
-    printf("\nDigite o vertice de origem: ");
-    scanf("%d", &vInicial);
+    do {
+        printf("\nDigite o vertice de origem: ");
+        scanf("%d", &vInicial);
+
+        for(int i = 1; i < grafo.numVertices; i++) {
+            if(vInicial == grafo.vertices[i]->v){verticeInvalido = 0; break;}
+        }
+
+    }while(verticeInvalido);
 
     logText("\n\nDijkstra: ");
     dijkstra(&grafo, vInicial);
